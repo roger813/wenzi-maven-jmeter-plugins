@@ -13,11 +13,10 @@ import org.apache.jmeter.samplers.SampleResult;
 
 public class WZResWriter extends AbstractJavaSamplerClient {
 	
-	private SampleResult sr;
-	private String fileURI;
-	private String content;
+//	private String fileURI;
+//	private String content;
 	
-	private String doWrite(String uri, String data) {
+	public void doWrite(String uri, String data) {
 		try {
 			File file = new File(uri);
 			File dirs = file.getParentFile();
@@ -35,19 +34,9 @@ public class WZResWriter extends AbstractJavaSamplerClient {
 			bw.flush();
 			bw.close();
 		} catch (IOException e) {
-			return "Error! Cause by: " + e.getMessage();
+			System.out.println( "Error! Cause by: " + e.getMessage() );
 		} 
-		return uri;
-	}
-	
-	public void setupTest(JavaSamplerContext jsc) {
-		sr = new SampleResult();
-		fileURI = jsc.getParameter("fileURI", "");
-		content = jsc.getParameter("content", "");
-		if (fileURI != null & fileURI.length() > 0)
-			sr.setSamplerData(fileURI);
-		if (content != null & content.length() > 0)
-			sr.setSamplerData(content);
+		System.out.println("Write Data: " + data);
 	}
 	
 	public Arguments getDefaultParameters() {
@@ -58,14 +47,23 @@ public class WZResWriter extends AbstractJavaSamplerClient {
 	}
 	
 	@Override
-	public SampleResult runTest(JavaSamplerContext arg0) {
+	public SampleResult runTest(JavaSamplerContext jsc) {
+		SampleResult sr = new SampleResult();
+		
 		// 写入事务开始
 		sr.sampleStart();
 		
+		String fileURI = jsc.getParameter("fileURI", "");
+		String content = jsc.getParameter("content", "");
+		if (fileURI != null && fileURI.length() > 0)
+			sr.setSamplerData(fileURI);
+		if (content != null && content.length() > 0)
+			sr.setSamplerData(content);
 		doWrite(fileURI, content);
 		
 		// 写入事务结束
 		sr.sampleEnd();
+		
 		sr.setSuccessful(true);
 		sr.setResponseData(fileURI, "UTF-8");
 		return sr;
