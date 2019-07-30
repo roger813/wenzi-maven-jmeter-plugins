@@ -11,10 +11,7 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
-public class WZResWriter extends AbstractJavaSamplerClient {
-	
-//	private String fileURI;
-//	private String content;
+public class WZRandomCSV extends AbstractJavaSamplerClient {
 	
 	public void doWrite(String uri, String data) {
 		try {
