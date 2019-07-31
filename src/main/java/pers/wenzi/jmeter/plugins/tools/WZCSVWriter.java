@@ -38,8 +38,8 @@ public class WZCSVWriter extends AbstractJavaSamplerClient {
 	
 	public Arguments getDefaultParameters() {
 		Arguments params = new Arguments();
-		params.addArgument("fileURI", "");
-		params.addArgument("content", "");
+		params.addArgument("FileURI", "");
+		params.addArgument("Content", "");
 		return params;
 	}
 	
@@ -50,12 +50,14 @@ public class WZCSVWriter extends AbstractJavaSamplerClient {
 		// 写入事务开始
 		sr.sampleStart();
 		
-		String fileURI = jsc.getParameter("fileURI", "");
-		String content = jsc.getParameter("content", "");
+		String fileURI = jsc.getParameter("FileURI", "");
+		String content = jsc.getParameter("Content", "");
 		if (fileURI != null && fileURI.length() > 0)
 			sr.setSamplerData(fileURI);
 		if (content != null && content.length() > 0)
 			sr.setSamplerData(content);
+//		System.out.println("fileURI: " + fileURI);
+//		System.out.println("content: " + content);
 		doWrite(fileURI, content);
 		
 		// 写入事务结束

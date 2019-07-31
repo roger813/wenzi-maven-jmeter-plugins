@@ -1,45 +1,60 @@
 package pers.wenzi.jmeter.plugins.tools;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.FileReader;
+import java.io.LineNumberReader;
 
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
-public class WZRandomCSV extends AbstractJavaSamplerClient {
+public class WZRandomCSV extends AbstractJavaSamplerClient { 
 	
-	public void doWrite(String uri, String data) {
+	private int getCounts(File file) {
+		int count = 0;
+		try {
+			FileReader fr = new FileReader(file);
+			LineNumberReader lr = new LineNumberReader(fr);
+			lr.skip(Long.MAX_VALUE);
+			count = lr.getLineNumber() + 1;
+			lr.close();
+			fr.close();
+		} catch (Exception e) {
+			System.out.println( "Error! Cause by: " + e.getMessage() );
+		}
+		return count;
+	}
+	
+	private String randomRead(String uri, int count) {
+		String str = "";
 		try {
 			File file = new File(uri);
-			File dirs = file.getParentFile();
-			
-			if (!dirs.exists())
-				dirs.mkdir();
-			if (!file.exists())
-				file.createNewFile();
-			// 开始写入数据
-			FileOutputStream fos = new FileOutputStream(file, true);
-			OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-			BufferedWriter bw = new BufferedWriter(osw);
-			bw.write(data);
-			bw.newLine();
-			bw.flush();
-			bw.close();
-		} catch (IOException e) {
+			FileReader fr = new FileReader(file);
+			LineNumberReader lr = new LineNumberReader(fr);
+			int sum = (count > 0) ? count : getCounts(file);
+			while (true) {
+				int random = (int)(Math.random() * sum + 1);
+				int line = 0;
+				while (line < random) {
+					line ++;
+					str = lr.readLine();
+				}
+//				System.out.println("random = " + random + " line = " + line + " str = " + str);
+				break;
+			}
+			lr.close();
+			fr.close();
+		} catch (Exception e) {
 			System.out.println( "Error! Cause by: " + e.getMessage() );
-		} 
-		System.out.println("Write Data: " + data);
+		}
+		return str;
 	}
 	
 	public Arguments getDefaultParameters() {
 		Arguments params = new Arguments();
-		params.addArgument("fileURI", "");
-		params.addArgument("content", "");
+		params.addArgument("FileURI", "");
+		params.addArgument("Count", "0");
 		return params;
 	}
 	
@@ -50,19 +65,20 @@ public class WZRandomCSV extends AbstractJavaSamplerClient {
 		// 写入事务开始
 		sr.sampleStart();
 		
-		String fileURI = jsc.getParameter("fileURI", "");
-		String content = jsc.getParameter("content", "");
+		String fileURI = jsc.getParameter("FileURI", "");
+		int count = jsc.getIntParameter("Count", 0);
 		if (fileURI != null && fileURI.length() > 0)
 			sr.setSamplerData(fileURI);
-		if (content != null && content.length() > 0)
-			sr.setSamplerData(content);
-		doWrite(fileURI, content);
+		String result = null;
+		while( (result = randomRead(fileURI, count)) == null ) {
+			result = randomRead(fileURI, count);
+		}
 		
 		// 写入事务结束
 		sr.sampleEnd();
 		
 		sr.setSuccessful(true);
-		sr.setResponseData(fileURI, "UTF-8");
+		sr.setResponseData(result, "UTF-8");
 		return sr;
 	}
 	
