@@ -69,7 +69,7 @@ public class WZCSVReader extends AbstractJavaSamplerClient {
 		if (fileURI != null && fileURI.length() > 0)
 			sr.setSamplerData(fileURI);
 		String result = null;
-		while( (result = randomRead(fileURI, count)) == null ) {
+		while( result == null ) {
 			result = randomRead(fileURI, count);
 		}
 		System.out.println("Read Data: " + result);
