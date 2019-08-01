@@ -1,4 +1,4 @@
-package pers.wenzi.jmeter.plugins.tools;
+package pers.wenzi.jmeter.java.sampler;
 
 import java.io.File;
 import java.io.FileReader;
