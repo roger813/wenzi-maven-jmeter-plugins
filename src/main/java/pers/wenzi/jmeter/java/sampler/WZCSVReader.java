@@ -9,7 +9,7 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
-public class WZRandomCSV extends AbstractJavaSamplerClient { 
+public class WZCSVReader extends AbstractJavaSamplerClient { 
 	
 	private int getCounts(File file) {
 		int count = 0;
