@@ -40,7 +40,6 @@ public class WZCSVReader extends AbstractJavaSamplerClient {
 					line ++;
 					str = lr.readLine();
 				}
-//				System.out.println("random = " + random + " line = " + line + " str = " + str);
 				break;
 			}
 			lr.close();
@@ -73,6 +72,7 @@ public class WZCSVReader extends AbstractJavaSamplerClient {
 		while( (result = randomRead(fileURI, count)) == null ) {
 			result = randomRead(fileURI, count);
 		}
+		System.out.println("Read Data: " + result);
 		
 		// 写入事务结束
 		sr.sampleEnd();
