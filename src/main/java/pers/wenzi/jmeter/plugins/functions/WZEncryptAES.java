@@ -27,7 +27,7 @@ public class WZEncryptAES extends AbstractFunction {
 
     static {
         desc.add("Clear text");
-        desc.add("Cipher String");
+        desc.add("Cipher string");
         desc.add("Name of variable in which to store the result (optional)");
     }
 
@@ -50,16 +50,16 @@ public class WZEncryptAES extends AbstractFunction {
 
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
         if (src == null) {
-            System.out.println("Error: Clear Text cannot be empty");
+            System.out.println("Error: Clear text cannot be empty");
 //            System.exit(1);
         }
         if (key == null) {
-            System.out.println("Error: Cipher String cannot be empty");
+            System.out.println("Error: Cipher string cannot be empty");
 //            System.exit(1);
         }
         String k = key.execute().trim();
         if (k.length() < 32) {
-            System.out.println("Error: Cipher String cannot be less then 32bit");
+            System.out.println("Error: Cipher string cannot be less then 32bit");
 //            System.exit(1);
         }
         String result = encypt(src.execute().trim(), k);

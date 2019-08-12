@@ -37,7 +37,7 @@
     </dependencies>
 
     <build>
-        <finalName>pers.wenzi.jmeter-plugins</finalName>
+        <finalName>wenzi-jmeter-plugins</finalName>
         <plugins>
             <plugin>
                 <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
