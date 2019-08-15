@@ -29,3 +29,6 @@ cp wenzi-jmeter-plugins.jar /your-apache-jmeter-version/bin/lib/ext/
 
 * WZCSVReader, 根据给定文件的绝对路径，返回随机行数的内容
 * WZCSVWriter, 根据给定文件的绝对路径，将指定内容写入文件
+
+### 使用
+
