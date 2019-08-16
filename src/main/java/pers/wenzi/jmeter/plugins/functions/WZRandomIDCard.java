@@ -55,8 +55,8 @@ public class WZRandomIDCard extends AbstractFunction {
     private CompoundVariable varName;
 
     static {
-        desc.add("Birthday, format = yyyyMMdd (required)");
-        desc.add("Gender, M = male, F = female (required)");
+        desc.add("Birthday, format = yyyyMMdd (optional)");
+        desc.add("Gender, M = male, F = female (optional)");
         desc.add("Name of variable in which to store the result (optional)");
     }
 
