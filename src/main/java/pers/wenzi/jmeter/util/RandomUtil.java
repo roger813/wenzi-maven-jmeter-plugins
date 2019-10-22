@@ -24,8 +24,6 @@ public class RandomUtil {
         long diff = (endDate.getTime() - startDate.getTime());
         long rand = 1000 + ((long) (new Random().nextDouble() * (diff - 1000)));
         return f.format(startDate.getTime() + rand);
-
-
     }
 
     public static String getRandomTime() {

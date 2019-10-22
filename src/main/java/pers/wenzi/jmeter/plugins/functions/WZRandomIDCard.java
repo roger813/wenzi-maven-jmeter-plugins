@@ -90,7 +90,7 @@ public class WZRandomIDCard extends AbstractFunction {
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
         String area = areas[(int)(Math.random() * areas.length)];
         String date = (birth == null)
-                ? WZRandomDate.getRandomDate((int)(Math.random() * (60 - 18 + 1) + 18))
+                ? WZRandomBirth.getRandomDate((int)(Math.random() * (60 - 18 + 1) + 18))
                 : birth.execute().trim();
         String code = String.valueOf((int)(Math.random() * (99 - 10 + 1) + 10));
         String sexs = (gender == null)
