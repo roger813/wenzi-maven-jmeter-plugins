@@ -32,16 +32,6 @@ public class WZRandomBirth extends AbstractFunction {
         desc.add("Name of variable in which to store the result (optional)");
     }
 
-    @Deprecated
-    public static String getRandomDate(int age) {
-        long curTime = System.currentTimeMillis();
-        long diff = (86400000L * 366L * (long)age)
-                + ((long)(Math.random() * 300) * 86400000L);
-        long resultTime = curTime - diff;
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        return fmt.format(resultTime);
-    }
-
     private String getRandomDate(
             String start, String end, String format) {
         SimpleDateFormat of = new SimpleDateFormat("yyyy-MM-dd");

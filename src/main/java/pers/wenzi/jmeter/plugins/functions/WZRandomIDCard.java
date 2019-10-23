@@ -7,6 +7,7 @@ import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.threads.JMeterVariables;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,8 +61,17 @@ public class WZRandomIDCard extends AbstractFunction {
         desc.add("Name of variable in which to store the result (optional)");
     }
 
-    public static String getGender(String gender) {
-        int i = 0;
+    private String getRandomDate(int age) {
+        long curTime = System.currentTimeMillis();
+        long diff = (86400000L * 366L * (long)age)
+                + ((long)(Math.random() * 300) * 86400000L);
+        long resultTime = curTime - diff;
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(resultTime);
+    }
+
+    private String getGender(String gender) {
+        int i;
         while (true) {
             i = (int) (Math.random() * 9);
             if ("M".equals(gender)) {
@@ -75,22 +85,22 @@ public class WZRandomIDCard extends AbstractFunction {
         return String.valueOf(i);
     }
 
-    public static String getVerCode(String id) {
-        char pszSrc[] = id.toCharArray();
+    private String getVerCode(String id) {
+        char[] pszSrc = id.toCharArray();
         int iS = 0;
-        int iW[] = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
-        char szVerCode[] = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+        int[] iW = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+        char[] szVerCode = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
         for (int i = 0; i < 17; i++) {
-            iS += (int)(pszSrc[i] - '0') * iW[i];
+            iS += (pszSrc[i] - '0') * iW[i];
         }
         int iY = iS % 11;
         return String.valueOf(szVerCode[iY]);
     }
 
-    public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
+    public String execute(SampleResult sampleResult, Sampler sampler) {
         String area = areas[(int)(Math.random() * areas.length)];
         String date = (birth == null)
-                ? WZRandomBirth.getRandomDate((int)(Math.random() * (60 - 18 + 1) + 18))
+                ? getRandomDate((int)(Math.random() * (60 - 18 + 1) + 18))
                 : birth.execute().trim();
         String code = String.valueOf((int)(Math.random() * (99 - 10 + 1) + 10));
         String sexs = (gender == null)

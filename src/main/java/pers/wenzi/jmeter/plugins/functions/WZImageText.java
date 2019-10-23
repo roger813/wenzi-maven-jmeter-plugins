@@ -6,7 +6,6 @@ import org.apache.jmeter.functions.InvalidVariableException;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.threads.JMeterVariables;
-import pers.wenzi.jmeter.util.RandomUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,9 +13,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class WZImageText extends AbstractFunction {
 
@@ -39,18 +41,43 @@ public class WZImageText extends AbstractFunction {
         desc.add("Name of variable in which to store the result (optional)");
     }
 
+    private String getRandomString(int length, String range) {
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(range.length());
+            sb.append(range.charAt(index));
+        }
+        return sb.toString();
+    }
+
+    private String getRandomTime() {
+        SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+        Date time = new Date();
+        return f.format(time);
+    }
+
+    private String getRandomDate(String start, String end) throws ParseException {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = f.parse(start);
+        Date endDate = f.parse(end);
+        long diff = (endDate.getTime() - startDate.getTime());
+        long rand = 1000 + ((long) (new Random().nextDouble() * (diff - 1000)));
+        return f.format(startDate.getTime() + rand);
+    }
+
     private String getTaoOrderNo() {
-        return "588" + RandomUtil.getRandomString(15, "1234567890");
+        return "588" + getRandomString(15, "1234567890");
     }
 
     private String getPddOrderNO() {
-        return "191111-589" + RandomUtil.getRandomString(12, "1234567890");
+        return "191111-589" + getRandomString(12, "1234567890");
     }
 
     private String ranDate() {
         String date;
         try {
-            date = RandomUtil.getRandomDate(START, END);
+            date = getRandomDate(START, END);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -59,7 +86,7 @@ public class WZImageText extends AbstractFunction {
     }
 
     private String ranTime() {
-        return RandomUtil.getRandomTime();
+        return getRandomTime();
     }
 
     private String editImage(String file,
@@ -69,7 +96,7 @@ public class WZImageText extends AbstractFunction {
                              int placeX, int placeY) {
         String outfile = new StringBuilder()
                 .append(URL)
-                .append(RandomUtil.getRandomString(
+                .append(getRandomString(
                         8, "abcdefghijklmnopqrstuvwxyz0123456789"))
                 .append(".jpg").toString();
         try {
@@ -156,8 +183,7 @@ public class WZImageText extends AbstractFunction {
     }
 
     @Override
-    public String execute(SampleResult sampleResult, Sampler sampler)
-            throws InvalidVariableException {
+    public String execute(SampleResult sampleResult, Sampler sampler) {
         final String _channel = channel.execute().trim();
         final String _imgtype = imgtype.execute().trim();
         String result = null;
