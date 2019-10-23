@@ -16,7 +16,7 @@ public class WZRandomIDCard extends AbstractFunction {
 
     private static final List<String> desc = new LinkedList<>();
     private static final String KEY = "__WZRandomIDCard";
-    private static final String areas[] = new String[] {
+    private static final String[] areas = new String[] {
             // 北京
             "110101","110102","110105","110106","110107","110108","110109","110111","110112",
             "110113","110114","110115","110116","110117","110118","110119",
@@ -51,14 +51,15 @@ public class WZRandomIDCard extends AbstractFunction {
             "430182"
     };
 
-    private CompoundVariable birth;
-    private CompoundVariable gender;
-    private CompoundVariable varName;
+    private String area = areas[(int)(Math.random() * areas.length)];
+    private String sex  = "";
+    private String age  = String.valueOf((int)(Math.random() * (60 - 18 + 1) + 18));
+    private String varname;
 
     static {
-        desc.add("Birthday, format = yyyyMMdd (optional)");
-        desc.add("Gender, M = male, F = female (optional)");
-        desc.add("Name of variable in which to store the result (optional)");
+        desc.add("Area code, eg. 310104, random is default (optional)");
+        desc.add("Age that u want to generate, 18-60 is default (optional)");
+        desc.add("Sex that u want to generate, eg. M or F, random is default (optional)");
     }
 
     private String getRandomDate(int age) {
@@ -70,13 +71,13 @@ public class WZRandomIDCard extends AbstractFunction {
         return fmt.format(resultTime);
     }
 
-    private String getGender(String gender) {
+    private String getGender() {
         int i;
         while (true) {
             i = (int) (Math.random() * 9);
-            if ("M".equals(gender)) {
+            if ("M".equals(sex)) {
                 if (i % 2 != 0) break;
-            } else if ("F".equals(gender)) {
+            } else if ("F".equals(sex)) {
                 if (i % 2 == 0) break;
             } else {
                 break;
@@ -98,40 +99,48 @@ public class WZRandomIDCard extends AbstractFunction {
     }
 
     public String execute(SampleResult sampleResult, Sampler sampler) {
-        String area = areas[(int)(Math.random() * areas.length)];
-        String date = (birth == null)
-                ? getRandomDate((int)(Math.random() * (60 - 18 + 1) + 18))
-                : birth.execute().trim();
+        String date = getRandomDate(Integer.parseInt(age));
         String code = String.valueOf((int)(Math.random() * (99 - 10 + 1) + 10));
-        String sexs = (gender == null)
-                ? getGender("R") : getGender(gender.execute().trim());
+        String sexs = getGender();
         String tmpCard = area + date + code + sexs;
         String verCode = getVerCode(tmpCard);
-        String idCard = tmpCard + verCode;
-//        System.out.println(idCard);
-
-        if (varName != null) {
+        String result = tmpCard + verCode;
+        if (varname != null) {
             JMeterVariables vars = getVariables();
-            final String varTrim = varName.execute().trim();
-            if (vars != null && varTrim.length() > 0) {
-                vars.put(varTrim, idCard);
+            if (vars != null && varname.length() > 0) {
+                vars.put(varname, result);
             }
         }
-        return idCard;
+        return result;
     }
 
     public void setParameters(Collection<CompoundVariable> collection) throws InvalidVariableException {
-        checkParameterCount(collection, 0, 3);
+        checkParameterCount(collection, 0, 4);
         Object[] values = collection.toArray();
-
-        birth = (values.length > 0)
-                ? ((CompoundVariable) values[0]) : null;
-        gender = (values.length > 1)
-                ? ((CompoundVariable) values[1]) : null;
-        varName = (values.length > 2)
-                ? ((CompoundVariable) values[2]) : null;
-//        System.out.println(gender);
-
+        if (values.length > 0) {
+            area = ((CompoundVariable) values[0]).execute().trim();
+            if (area.length() < 1) {
+                area = areas[(int)(Math.random() * areas.length)];
+            }
+        }
+        if (values.length > 1) {
+            age = ((CompoundVariable) values[1]).execute().trim();
+            if (age.length() < 1) {
+                age = String.valueOf((int)(Math.random() * (60 - 18 + 1) + 18));
+            }
+        }
+        if (values.length > 2) {
+            sex = ((CompoundVariable) values[2]).execute().trim();
+            if (sex.length() < 1) {
+                sex = "";
+            }
+        }
+        if (values.length > 3) {
+            varname = ((CompoundVariable) values[3]).execute().trim();
+            if (varname.length() < 1) {
+                varname = null;
+            }
+        }
     }
 
     public String getReferenceKey() {
