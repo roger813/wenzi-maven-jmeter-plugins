@@ -12,6 +12,7 @@ import org.apache.jmeter.threads.JMeterVariables;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +22,8 @@ public class WZImageBase64 extends AbstractFunction {
     private static final List<String> desc = new LinkedList<>();
     private static final String KEY = "__WZImageBase64";
 
-    private CompoundVariable file;
-    private CompoundVariable varName;
+    private String file;
+    private String varname;
 
     static {
         desc.add("file, must be absolute path");
@@ -47,15 +48,13 @@ public class WZImageBase64 extends AbstractFunction {
     }
 
     @Override
-    public String execute(SampleResult sampleResult, Sampler sampler)
-            throws InvalidVariableException {
-        String result = image2Base64(file.execute().trim());
+    public String execute(SampleResult sampleResult, Sampler sampler) {
+        String result = image2Base64(file);
         // 结果保存至变量
-        if (varName != null) {
+        if (varname != null) {
             JMeterVariables vars = getVariables();
-            final String varTrim = varName.execute().trim();
-            if (vars != null && varTrim.length() > 0) {
-                vars.put(varTrim, result);
+            if (vars != null && varname.length() > 0) {
+                vars.put(varname, result);
             }
         }
         return result;
@@ -65,10 +64,19 @@ public class WZImageBase64 extends AbstractFunction {
     public void setParameters(Collection<CompoundVariable> collection) throws InvalidVariableException {
         checkParameterCount(collection, 1, 2);
         Object[] values = collection.toArray();
-        file = (values.length > 0)
-                ? ((CompoundVariable) values[0]) : null;
-        varName = (values.length > 4)
-                ? ((CompoundVariable) values[3]) : null;
+        if (values.length > 0) {
+            file = ((CompoundVariable) values[0]).execute().trim();
+            if (file.length() < 0) {
+                System.out.println("file must not be empty");
+                System.exit(2);
+            }
+        }
+        if (values.length > 1) {
+            varname = ((CompoundVariable) values[1]).execute().trim();
+            if (varname.length() < 1) {
+                varname = null;
+            }
+        }
     }
 
     @Override
