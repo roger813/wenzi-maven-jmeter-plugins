@@ -20,10 +20,10 @@ public class WZRandomBirth extends AbstractFunction {
     private static final List<String> desc = new LinkedList<>();
     private static final String KEY = "__WZRandomBirth";
 
-    private String dateS    = null;
-    private String dateE    = null;
-    private String format   = null;
-    private String varname  = null;
+    private String strStart;
+    private String strEnd;
+    private String format;
+    private String varname;
 
     static {
         desc.add("Start Date, format: yyyy-MM-dd. required");
@@ -32,19 +32,18 @@ public class WZRandomBirth extends AbstractFunction {
         desc.add("Name of variable in which to store the result (optional)");
     }
 
-    private String getRandomDate(
-            String start, String end, String format) {
-        SimpleDateFormat of = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat tf = new SimpleDateFormat(format);
-        Date dateS;
-        Date dateE;
+    private String getRandomDate() {
+        SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputFormat = new SimpleDateFormat(format);
+        Date dateStart;
+        Date dateEnd;
         String date = null;
         try {
-            dateS = of.parse(start);
-            dateE = of.parse(end);
-            long diff = (dateE.getTime() - dateS.getTime());
+            dateStart = parseFormat.parse(strStart);
+            dateEnd = parseFormat.parse(strEnd);
+            long diff = (dateEnd.getTime() - dateStart.getTime());
             long rand = 1000 + ((long) (new Random().nextDouble() * (diff - 1000)));
-            date = tf.format(dateS.getTime() + rand);
+            date = outputFormat.format(dateStart.getTime() + rand);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -52,9 +51,7 @@ public class WZRandomBirth extends AbstractFunction {
     }
 
     public String execute(SampleResult sampleResult, Sampler sampler) {
-        // System.out.println("start: " + dateS + ", end: " + dateE + ", format: " + format);
-        String result = getRandomDate(dateS, dateE, format);
-        // System.out.println("date: " + result);
+        String result = getRandomDate();
         if (varname != null) {
             JMeterVariables vars = getVariables();
             if (vars != null && varname.length() > 0) {
@@ -68,12 +65,16 @@ public class WZRandomBirth extends AbstractFunction {
         checkParameterCount(collection, 1, 4);
         Object[] values = collection.toArray();
         if (values.length > 0) {
-            dateS = ((CompoundVariable) values[0]).execute().trim();
+            strStart = ((CompoundVariable) values[0]).execute().trim();
+            if (strStart.length() < 1) {
+                System.out.println("start date must not be empty");
+                System.exit(2);
+            }
         }
         if (values.length > 1) {
-            dateE = ((CompoundVariable) values[1]).execute().trim();
-            if (dateE.length() < 1) {
-                dateE = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            strEnd = ((CompoundVariable) values[1]).execute().trim();
+            if (strEnd.length() < 1) {
+                strEnd = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             }
         }
         if (values.length > 2) {
