@@ -26,7 +26,7 @@ public class WZRandomBirth extends AbstractFunction {
     private String varname;
 
     static {
-        desc.add("Start Date, format: yyyy-MM-dd. required");
+        desc.add("Start Date, format: yyyy-MM-dd (required)");
         desc.add("End Date, format: yyyy-MM-dd. Current time is default (optional)");
         desc.add("Format, format u want to show. yyyy-MM-dd id default (optional)");
         desc.add("Name of variable in which to store the result (optional)");

@@ -26,7 +26,7 @@ public class WZImageBase64 extends AbstractFunction {
     private String varname;
 
     static {
-        desc.add("file, must be absolute path");
+        desc.add("file, must be absolute path (required)");
         desc.add("Name of variable in which to store the result (optional)");
     }
 
