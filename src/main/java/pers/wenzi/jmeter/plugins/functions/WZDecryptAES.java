@@ -22,9 +22,13 @@ public class WZDecryptAES extends AbstractFunction {
     private static final List<String> desc = new LinkedList<>();
     private static final String KEY = "__WZAesDecrypt";
 
-    private CompoundVariable src;
-    private CompoundVariable key;
-    private CompoundVariable varName;
+    // private CompoundVariable src;
+    // private CompoundVariable key;
+    // private CompoundVariable varName;
+
+    private String src;
+    private String key;
+    private String varname;
 
     static {
         desc.add("Clear text");
@@ -50,25 +54,11 @@ public class WZDecryptAES extends AbstractFunction {
     }
 
     public String execute(SampleResult sampleResult, Sampler sampler) throws InvalidVariableException {
-        if (src == null) {
-            System.out.println("Error: Clear text cannot be empty");
-//            System.exit(1);
-        }
-        if (key == null) {
-            System.out.println("Error: Cipher string cannot be empty");
-//            System.exit(1);
-        }
-        String k = key.execute().trim();
-        if (k.length() < 32) {
-            System.out.println("Error: Cipher string cannot be less then 32bit");
-//            System.exit(1);
-        }
-        String result = decrypt(src.execute().trim(), k);
-        if (varName != null) {
+        String result = decrypt(src, key);
+        if (varname != null) {
             JMeterVariables vars = getVariables();
-            final String varTrim = varName.execute().trim();
-            if (vars != null && varTrim.length() > 0) {
-                vars.put(varTrim, result);
+            if (vars != null && varname.length() > 0) {
+                vars.put(varname, result);
             }
         }
         return result;
@@ -77,12 +67,23 @@ public class WZDecryptAES extends AbstractFunction {
     public void setParameters(Collection<CompoundVariable> collection) throws InvalidVariableException {
         checkParameterCount(collection, 2, 3);
         Object[] values = collection.toArray();
-        src = (values.length > 0)
-                ? ((CompoundVariable) values[0]) : null;
-        key = (values.length > 1)
-                ? ((CompoundVariable) values[1]) : null;
-        varName = (values.length > 2)
-                ? ((CompoundVariable) values[1]) : null;
+        if (values.length > 0) {
+            src = ((CompoundVariable) values[0]).execute().trim();
+            if (src.length() < 1) {
+                System.out.println("clear text must not be empty");
+                System.exit(2);
+            }
+        }
+        if (values.length > 1) {
+            key = ((CompoundVariable) values[1]).execute().trim();
+            if (key.length() < 32) {
+                System.out.println("cipher string must not be less then 32bit");
+                System.exit(2);
+            }
+        }
+        if (values.length > 2) {
+            varname = ((CompoundVariable) values[2]).execute().trim();
+        }
     }
 
     public String getReferenceKey() {
