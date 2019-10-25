@@ -12,7 +12,6 @@ import org.apache.jmeter.threads.JMeterVariables;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,9 +72,6 @@ public class WZImageBase64 extends AbstractFunction {
         }
         if (values.length > 1) {
             varname = ((CompoundVariable) values[1]).execute().trim();
-            if (varname.length() < 1) {
-                varname = null;
-            }
         }
     }
 

@@ -85,9 +85,6 @@ public class WZRandomBirth extends AbstractFunction {
         }
         if (values.length > 3) {
             varname = ((CompoundVariable) values[3]).execute().trim();
-            if (varname.length() < 1) {
-                varname = null;
-            }
         }
     }
 

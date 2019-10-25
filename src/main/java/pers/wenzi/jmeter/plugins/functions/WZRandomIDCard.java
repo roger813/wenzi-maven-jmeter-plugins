@@ -51,24 +51,15 @@ public class WZRandomIDCard extends AbstractFunction {
             "430182"
     };
 
-    private String area = areas[(int)(Math.random() * areas.length)];
-    private String sex  = "";
-    private String age  = String.valueOf((int)(Math.random() * (60 - 18 + 1) + 18));
+    private String birth;
+    private String area;
+    private String sex;
     private String varname;
 
     static {
-        desc.add("Area code, eg. 310104, random is default (optional)");
-        desc.add("Age that u want to generate, 18-60 is default (optional)");
-        desc.add("Sex that u want to generate, eg. M or F, random is default (optional)");
-    }
-
-    private String getRandomDate(int age) {
-        long curTime = System.currentTimeMillis();
-        long diff = (86400000L * 366L * (long)age)
-                + ((long)(Math.random() * 300) * 86400000L);
-        long resultTime = curTime - diff;
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        return fmt.format(resultTime);
+        desc.add("Birth, eg. 19880808. Format is yyyyMMdd (required)");
+        desc.add("Area, eg. 310104. if empty, random whole country (optional)");
+        desc.add("Sex, eg. M or F, if empty, random in M or F (optional)");
     }
 
     private String getGender() {
@@ -86,8 +77,8 @@ public class WZRandomIDCard extends AbstractFunction {
         return String.valueOf(i);
     }
 
-    private String getVerCode(String id) {
-        char[] pszSrc = id.toCharArray();
+    private String getVerCode(String tmpCard) {
+        char[] pszSrc = tmpCard.toCharArray();
         int iS = 0;
         int[] iW = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
         char[] szVerCode = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
@@ -99,10 +90,9 @@ public class WZRandomIDCard extends AbstractFunction {
     }
 
     public String execute(SampleResult sampleResult, Sampler sampler) {
-        String date = getRandomDate(Integer.parseInt(age));
         String code = String.valueOf((int)(Math.random() * (99 - 10 + 1) + 10));
         String sexs = getGender();
-        String tmpCard = area + date + code + sexs;
+        String tmpCard = area + birth + code + sexs;
         String verCode = getVerCode(tmpCard);
         String result = tmpCard + verCode;
         if (varname != null) {
@@ -115,18 +105,19 @@ public class WZRandomIDCard extends AbstractFunction {
     }
 
     public void setParameters(Collection<CompoundVariable> collection) throws InvalidVariableException {
-        checkParameterCount(collection, 0, 4);
+        checkParameterCount(collection, 1, 4);
         Object[] values = collection.toArray();
         if (values.length > 0) {
-            area = ((CompoundVariable) values[0]).execute().trim();
-            if (area.length() < 1) {
-                area = areas[(int)(Math.random() * areas.length)];
+            birth = ((CompoundVariable) values[0]).execute().trim();
+            if (birth.length() < 1) {
+                System.out.println("birth must not be empty");
+                System.exit(2);
             }
         }
         if (values.length > 1) {
-            age = ((CompoundVariable) values[1]).execute().trim();
-            if (age.length() < 1) {
-                age = String.valueOf((int)(Math.random() * (60 - 18 + 1) + 18));
+            area = ((CompoundVariable) values[1]).execute().trim();
+            if (area.length() < 1) {
+                area = areas[(int)(Math.random() * areas.length)];
             }
         }
         if (values.length > 2) {
@@ -137,9 +128,6 @@ public class WZRandomIDCard extends AbstractFunction {
         }
         if (values.length > 3) {
             varname = ((CompoundVariable) values[3]).execute().trim();
-            if (varname.length() < 1) {
-                varname = null;
-            }
         }
     }
 
