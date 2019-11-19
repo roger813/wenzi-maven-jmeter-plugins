@@ -57,7 +57,7 @@ public class WZRandomIDCard extends AbstractFunction {
     private String varname;
 
     static {
-        desc.add("Birth, eg. 19880808. Format is yyyyMMdd (required)");
+        desc.add("Birth, eg. 1988-08-08. Format is yyyy-MM-dd (required)");
         desc.add("Area, eg. 310104. if empty, random whole country (optional)");
         desc.add("Sex, eg. M or F, if empty, random in M or F (optional)");
     }
@@ -90,6 +90,7 @@ public class WZRandomIDCard extends AbstractFunction {
     }
 
     public String execute(SampleResult sampleResult, Sampler sampler) {
+        // System.out.println("birth: " + birth + "; area: " + area + "; sex: " + sex);
         String code = String.valueOf((int)(Math.random() * (99 - 10 + 1) + 10));
         String sexs = getGender();
         String tmpCard = area + birth + code + sexs;
@@ -112,6 +113,9 @@ public class WZRandomIDCard extends AbstractFunction {
             if (birth.length() < 1) {
                 System.out.println("birth must not be empty");
                 System.exit(2);
+            } else {
+                String[] temp = birth.split("-");
+                birth = temp[0] + temp[1] + temp[2];
             }
         }
         if (values.length > 1) {
