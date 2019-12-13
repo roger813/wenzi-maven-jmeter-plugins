@@ -19,10 +19,10 @@ import java.util.Random;
 /**
  * 随机生成身份证号码
  */
-public class WZRandomIDCard extends AbstractFunction {
+public class WZIDCardFromAge extends AbstractFunction {
 
     private static final List<String> desc = new LinkedList<>();
-    private static final String KEY = "__WZRandomIDCard";
+    private static final String KEY = "__WZIDCardFromAge";
     private static final String[] areas = new String[] {
             // 北京
             "110101","110102","110105","110106","110107","110108","110109","110111","110112",
@@ -59,13 +59,46 @@ public class WZRandomIDCard extends AbstractFunction {
     };
 
     private String sex;
-    private String birth;
+    private String minAge;
+    private String maxAge;
     private String varname;
 
     static {
-        desc.add("Sex, Odd male and Even female. Default random (optional)");
-        desc.add("Birth, format yyyyMMdd. Default age is 18 ~ 60 (optonal)");
+        desc.add("Sex [M/F]. Default random (optional)");
+        desc.add("Min age. Default 18 (optional)");
+        desc.add("Max age. Default 60 (optional)");
         desc.add("Name of variable in which to store the result (optional)");
+    }
+
+    private String randomSex(String sex) {
+        int i;
+        while (true) {
+            i = new Random().nextInt(10);
+            if ("M".equalsIgnoreCase(sex)) {
+                if (i % 2 == 1) break;
+                continue;
+            }
+            if ("F".equalsIgnoreCase(sex)) {
+                if (i % 2 == 0) break;
+                continue;
+            }
+        }
+        return String.valueOf(i);
+    }
+
+    private String randomBirth(int minAge, int maxAge) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        long min, max;
+        calendar.add(Calendar.YEAR, -minAge);
+        min = calendar.getTime().getTime();
+        calendar.add(Calendar.YEAR, -(maxAge - minAge + 1));
+        calendar.add(Calendar.DATE, 1);
+        max = calendar.getTime().getTime();
+        return fmt.format(
+            new Date((long) (Math.random() * (max - min + 1) + min))
+        );
     }
 
     private String getVerCode(String tmpCard) {
@@ -80,36 +113,15 @@ public class WZRandomIDCard extends AbstractFunction {
         return String.valueOf(szVerCode[iY]);
     }
 
-    private String randomBirth() {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date());
-        long min, max;
-        calendar.add(Calendar.YEAR, -18);
-        min = calendar.getTime().getTime();
-        calendar.add(Calendar.YEAR, -43);
-        calendar.add(Calendar.DATE, 1);
-        max = calendar.getTime().getTime();
-        return fmt.format(
-            new Date((long) (Math.random() * (max - min + 1) + min))
-        );
-    }
-
     public String execute(SampleResult sampleResult, Sampler sampler) {
-        // System.out.println("sex: " + this.sex + "; birth: " + this.birth);
-        String sex, birth;
-        if (this.sex == null || this.sex.length() == 0) {
-            sex = String.valueOf(new Random().nextInt(9));
-        } else {
-            sex = this.sex;
-        }
-        if (this.birth == null || this.birth.length() == 0) {
-            birth = randomBirth();
-        } else {
-            birth = this.birth;
-        }
-        String area = areas[((int) (Math.random() * (areas.length + 1) + 0))];
-        String code = String.valueOf((int)(Math.random() * (99 - 10 + 1) + 10));
+        sex = randomSex(sex);
+        int _minAge = (minAge == null)
+                ? 18 : Integer.valueOf(minAge);
+        int _maxAge = (maxAge == null)
+                ? 60 : Integer.valueOf(maxAge);
+        String birth = randomBirth(_minAge, _maxAge);
+        String area = areas[new Random().nextInt(areas.length)];
+        String code = String.valueOf(new Random().nextInt(99) + 10);
         String tmpCard = area + birth + code + sex;
         String verCode = getVerCode(tmpCard);
         String result = tmpCard + verCode;
@@ -124,15 +136,18 @@ public class WZRandomIDCard extends AbstractFunction {
 
     public void setParameters(Collection<CompoundVariable> collection)
             throws InvalidVariableException {
-        checkParameterCount(collection, 0, 3);
+        checkParameterCount(collection, 0, 4);
         Object[] values = collection.toArray();
         sex = (values.length > 0)
                 ? ((CompoundVariable) values[0]).execute().trim()
                 : null;
-        birth = (values.length > 1)
+        minAge = (values.length > 1)
                 ? ((CompoundVariable) values[1]).execute().trim()
                 : null;
-        varname = (values.length > 2)
+        maxAge = (values.length > 2)
+                ? ((CompoundVariable) values[1]).execute().trim()
+                : null;
+        varname = (values.length > 3)
                 ? ((CompoundVariable) values[2]).execute().trim()
                 : null;
     }

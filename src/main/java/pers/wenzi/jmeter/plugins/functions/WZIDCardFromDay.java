@@ -19,10 +19,10 @@ import java.util.Random;
 /**
  * 随机生成身份证号码
  */
-public class WZRandomIDCard extends AbstractFunction {
+public class WZIDCardFromDay extends AbstractFunction {
 
     private static final List<String> desc = new LinkedList<>();
-    private static final String KEY = "__WZRandomIDCard";
+    private static final String KEY = "__WZIDCardFromDay";
     private static final String[] areas = new String[] {
             // 北京
             "110101","110102","110105","110106","110107","110108","110109","110111","110112",
