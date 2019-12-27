@@ -108,7 +108,7 @@ public class WZRandomIDCard extends AbstractFunction {
         } else {
             birth = this.birth;
         }
-        String area = areas[((int) (Math.random() * (areas.length + 1) + 0))];
+        String area = areas[new Random().nextInt(areas.length)];
         String code = String.valueOf((int)(Math.random() * (99 - 10 + 1) + 10));
         String tmpCard = area + birth + code + sex;
         String verCode = getVerCode(tmpCard);
