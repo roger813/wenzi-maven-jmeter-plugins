@@ -92,7 +92,7 @@ public class WZIDCardFromBirth extends AbstractFunction {
         calendar.add(Calendar.DATE, 1);
         long max = calendar.getTime().getTime();
         return fmt.format(
-                new Date(((long) (new Random().nextDouble() * (max - min))) + min));
+            new Date(((long) (new Random().nextDouble() * (max - min))) + min));
     }
 
     private String getVerCode(String tmpCard) {
