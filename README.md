@@ -7,30 +7,35 @@
 
 | 函数名 | 用途 | 测试版本 |
 | :- | :- | :- |
-
+| WZDecryptAES      | 返回一个由 AES 解密后的字符串 | Jmeter 3.2 |
+| WZEncryptAES      | 返回一个由 AES 加密后的字符串 | Jmeter 3.2 |
+| WZIDCardFromAge   | 根据性别、最小~最大年龄，返回随机身份证号码（18位）| Jmeter 3.2 |
+| WZIDCardFromBirth | 根据性别、出生日期，返回随机身份证号码（18位）| Jmeter 3.2 |
+| WZImageBase64     | 根据指定的图片路径，返回由 Base64 编码后的字符串 | Jmeter 3.2 |
 
 ### 安装
 ---
 
 ```
 git clone
+cd wenzi-maven-jmeter-plugins
 mvn clean package
-cp wenzi-jmeter-plugins.jar /your-apache-jmeter-version/bin/lib/ext/
+cp wenzi-maven-jmeter-plugins.jar /your-jmeter-path/lib/ext/
 ```
+your-jmeter-path 请替换为自己的 Jmeter 安装路径
 
 ### 使用
 ---
 
-##### WZDecryptAES
+##### __WZDecryptAES
 
-```
-* 格式：${__WZDecryptAES(src, key, name)}
-* 描述：根据给定的原文和密钥，返回解密后的字符串
-* 参数：
-    - src 需要解密的字符串（必须）
-    - key 解密私钥（必须）
-    - name 变量名，用于存放解密结果（可选）
-```
+返回一个由 AES 解密后的字符串
+
+变量
+| 变量名 | 含义 | 是否必须 |
+| :- | :- | :-: |
+| Clear text |||
+| Cipher key |||
 
 ##### WZEncryptAES
 
