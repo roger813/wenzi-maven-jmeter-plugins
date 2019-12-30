@@ -61,7 +61,7 @@ ${__WZDecryptAES(8v3f1iDoCfXsTlscEts5Pg==,secret key,)}
 
 举例
 ```
-${__WZDecryptAES(hello world,secret key,)}
+${__WZEncryptAES(hello world,secret key,)}
 ```
 返回：8v3f1iDoCfXsTlscEts5Pg==
 
@@ -110,15 +110,15 @@ ${__WZIDCardFromAge(M,33,48,)}
 
 举例
 ```
-${__WZIDCardFromAge(,,)}
+${__WZIDCardFromBirth(,,)}
 ```
 返回性别随机、年龄18-60周岁的身份证号码
 ```
-${__WZIDCardFromAge(M,,)}
+${__WZIDCardFromBirth(M,,)}
 ```
 返回男性、年龄18-60周岁的身份证号码
 ```
-${__WZIDCardFromAge(M,19900808,)}
+${__WZIDCardFromBirth(M,19900808,)}
 ```
 返回男性、出生日期为1990-08-08的身份证号码
 
