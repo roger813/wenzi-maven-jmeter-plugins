@@ -97,9 +97,9 @@ public class WZIDCardFromBirth extends AbstractFunction {
 
     private String getVerCode(String tmpCard) {
         char[] pszSrc = tmpCard.toCharArray();
-        int iS = 0;
         int[] iW = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
         char[] szVerCode = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+        int iS = 0;
         for (int i = 0; i < 17; i++) {
             iS += (pszSrc[i] - '0') * iW[i];
         }
@@ -109,14 +109,10 @@ public class WZIDCardFromBirth extends AbstractFunction {
 
     public String execute(SampleResult sampleResult, Sampler sampler) {
         String result;
-        String area = areas[
-                new Random().nextInt(areas.length - 1)];
-        String _birth = (birth.length() < 8)
-                ? randomBirth() : birth;
-        String order = String.valueOf(
-                (new Random().nextInt(90) + 10));
-        String _sex = (sex.length() < 1)
-                ? randomSex(null) : randomSex(sex);
+        String area = areas[new Random().nextInt(areas.length - 1)];
+        String _birth = (birth.length() < 8) ? randomBirth() : birth;
+        String order = String.valueOf((new Random().nextInt(90) + 10));
+        String _sex = (sex.length() < 1) ? randomSex(null) : randomSex(sex);
         result = area + _birth + order + _sex;
         result = result + getVerCode(result);
         if (varname != null) {
