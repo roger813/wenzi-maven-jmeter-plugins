@@ -166,13 +166,3 @@ ${__WZRandomDate(1990-08-08,1992-08-08,yyyyMMdd,)}
 ```
 返回：19910808
 
-### 嵌套使用
----
-
-__WZRandomDate生成的随机日期用于__WZIDCardFromBirth
-需要新建BeanShell PreProcessor中预先定义
-```
-vars.put("birth", "${__WZRandomDate(1984-08-08,1989-08-08,yyyyMMdd,)}");
-vars.put("idcard", "${__WZIDCardFromBirth(F,"+ vars.get("birth") +",)}");
-```
-请求中使用${idcard}即可。
