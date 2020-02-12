@@ -22,7 +22,7 @@
 git clone
 cd wenzi-maven-jmeter-plugins
 mvn clean package
-cp wenzi-maven-jmeter-plugins.jar /your-jmeter-path/lib/ext/
+cp /target/wenzi-jmeter-plugins-1.0-SNAPSHOT.jar /your-jmeter-path/lib/ext/
 ```
 your-jmeter-path 请替换为自己的 Jmeter 安装路径
 
