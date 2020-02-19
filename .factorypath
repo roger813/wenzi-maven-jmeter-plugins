@@ -149,4 +149,5 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/org/freemarker/freemarker/2.3.23/freemarker-2.3.23.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/jmeter/ApacheJMeter_java/3.2/ApacheJMeter_java-3.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/apache/jmeter/ApacheJMeter_components/3.2/ApacheJMeter_components-3.2.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/alibaba/fastjson/1.2.62/fastjson-1.2.62.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

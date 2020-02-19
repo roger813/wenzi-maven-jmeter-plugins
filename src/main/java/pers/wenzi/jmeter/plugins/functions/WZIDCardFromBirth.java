@@ -67,7 +67,7 @@ public class WZIDCardFromBirth extends AbstractFunction {
         desc.add("Name of variable in which to store the result (optional)");
     }
 
-    private String randomSex(String sex) {
+    private String randomSex(final String sex) {
         int i;
         while (true) {
             i = new Random().nextInt(10);
@@ -83,40 +83,40 @@ public class WZIDCardFromBirth extends AbstractFunction {
     }
 
     private String randomBirth() {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        Calendar calendar = new GregorianCalendar();
+        final SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        final Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         calendar.add(Calendar.YEAR, -18);
-        long min = calendar.getTime().getTime();
+        final long min = calendar.getTime().getTime();
         calendar.add(Calendar.YEAR, -43);
         calendar.add(Calendar.DATE, 1);
-        long max = calendar.getTime().getTime();
+        final long max = calendar.getTime().getTime();
         return fmt.format(
             new Date(((long) (new Random().nextDouble() * (max - min))) + min));
     }
 
-    private String getVerCode(String tmpCard) {
-        char[] pszSrc = tmpCard.toCharArray();
-        int[] iW = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
-        char[] szVerCode = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+    private String getVerCode(final String tmpCard) {
+        final char[] pszSrc = tmpCard.toCharArray();
+        final int[] iW = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+        final char[] szVerCode = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
         int iS = 0;
         for (int i = 0; i < 17; i++) {
             iS += (pszSrc[i] - '0') * iW[i];
         }
-        int iY = iS % 11;
+        final int iY = iS % 11;
         return String.valueOf(szVerCode[iY]);
     }
 
-    public String execute(SampleResult sampleResult, Sampler sampler) {
+    public String execute(final SampleResult sampleResult, final Sampler sampler) {
         String result;
-        String area = areas[new Random().nextInt(areas.length - 1)];
-        String _birth = (birth.length() < 8) ? randomBirth() : birth;
-        String order = String.valueOf((new Random().nextInt(90) + 10));
-        String _sex = (sex.length() < 1) ? randomSex(null) : randomSex(sex);
+        final String area = areas[new Random().nextInt(areas.length - 1)];
+        final String _birth = (birth.length() < 8) ? randomBirth() : birth;
+        final String order = String.valueOf((new Random().nextInt(90) + 10));
+        final String _sex = (sex.length() < 1) ? randomSex(null) : randomSex(sex);
         result = area + _birth + order + _sex;
         result = result + getVerCode(result);
         if (varname != null) {
-            JMeterVariables vars = getVariables();
+            final JMeterVariables vars = getVariables();
             if (vars != null && varname.length() > 0) {
                 vars.put(varname, result);
             }
@@ -130,10 +130,10 @@ public class WZIDCardFromBirth extends AbstractFunction {
         return result;
     }
 
-    public void setParameters(Collection<CompoundVariable> collection)
+    public void setParameters(final Collection<CompoundVariable> collection)
             throws InvalidVariableException {
         checkParameterCount(collection, 0, 3);
-        Object[] values = collection.toArray();
+        final Object[] values = collection.toArray();
         if (values.length > 0)
             sex = ((CompoundVariable) values[0]).execute().trim();
         if (values.length > 1)
