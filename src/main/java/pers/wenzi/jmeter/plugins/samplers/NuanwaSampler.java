@@ -83,14 +83,10 @@ public class NuanwaSampler extends AbstractJavaSamplerClient {
 
   @Override
   public void setupTest(JavaSamplerContext arg0) {
-    // TODO Auto-generated method stub
-
   }
 
   @Override
   public void teardownTest(JavaSamplerContext arg0) {
-    // TODO Auto-generated method stub
-
   }
   
 }

@@ -15,7 +15,7 @@ public class SignUtil
   public static String sign(final Map<String, Object> bizContent, final String timestamp, final String secret) {
     String genSign = "";
     try {
-      final Map<String, Object> map = new HashMap(bizContent);
+      final Map<String, Object> map = new HashMap<String, Object>(bizContent);
       final StringBuilder stringBuilder = new StringBuilder("");
       map.put("timestamp", timestamp);
 
@@ -43,27 +43,26 @@ public class SignUtil
       stringBuilder.append(treeMapStr);
 
       final String orgStr = secret;
-      log.info("���������������{}", orgStr);
+      log.info("orgStr: " + orgStr);
       final String genSign = DigestUtils.md5Hex(orgStr.getBytes("UTF-8")).toLowerCase();
-      log.info("���������������{}", genSign);
+      log.info("genSign: " + genSign);
       if (genSign.equals(sign)) {
         flag = true;
       }
     } catch (final Exception e) {
-      log.error("������������", e);
+      log.error("caused by: " + e.getLocalizedMessage());
     }
     return flag;
   }
 
+  @SuppressWarnings("unchecked")
   private static TreeMap<String, Object> sortMap(final Map<String, Object> map) {
-    final TreeMap<String, Object> treeMap = new TreeMap();
+    final TreeMap<String, Object> treeMap = new TreeMap<String, Object>();
     for (final Map.Entry<String, Object> entry : map.entrySet()) {
       if ((entry.getValue() instanceof Map)) {
-        final TreeMap<String, Object> subTreeMap = sortMap((Map) entry.getValue());
+        final TreeMap<String, Object> subTreeMap = sortMap((Map<String, Object>) entry.getValue());
         treeMap.put(entry.getKey(), subTreeMap);
-      }
-      else
-      {
+      } else {
         treeMap.put(entry.getKey(), entry.getValue());
       }
     }

@@ -19,7 +19,6 @@ import java.util.Random;
 /**
  * 随机生成身份证号码
  */
-@SuppressWarnings("unused")
 public class WZIDCardFromAge extends AbstractFunction {
 
     private static final List<String> desc = new LinkedList<>();
@@ -69,7 +68,7 @@ public class WZIDCardFromAge extends AbstractFunction {
         desc.add("Name of variable in which to store the result (optional)");
     }
 
-    private String randomSex(String sex) {
+    private String randomSex(final String sex) {
         int i;
         while (true) {
             i = new Random().nextInt(10);
@@ -84,9 +83,9 @@ public class WZIDCardFromAge extends AbstractFunction {
         return String.valueOf(i);
     }
 
-    private String randomBirth(int minAge, int maxAge) {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-        Calendar calendar = new GregorianCalendar();
+    private String randomBirth(final int minAge, final int maxAge) {
+        final SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        final Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         long min, max;
         calendar.add(Calendar.YEAR, -minAge);
@@ -98,35 +97,35 @@ public class WZIDCardFromAge extends AbstractFunction {
             new Date(((long) (new Random().nextDouble() * (max - min))) + min));
     }
 
-    private String getVerCode(String suff) {
-        char[] pszSrc = suff.toCharArray();
+    private String getVerCode(final String suff) {
+        final char[] pszSrc = suff.toCharArray();
         int iS = 0;
-        int[] iW = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
-        char[] szVerCode = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+        final int[] iW = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+        final char[] szVerCode = new char[]{'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
         for (int i = 0; i < 17; i++) {
             iS += (pszSrc[i] - '0') * iW[i];
         }
-        int iY = iS % 11;
+        final int iY = iS % 11;
         return String.valueOf(szVerCode[iY]);
     }
 
-    public String execute(SampleResult sampleResult, Sampler sampler) {
+    public String execute(final SampleResult sampleResult, final Sampler sampler) {
         String result;
-        String area = areas[
+        final String area = areas[
                 new Random().nextInt(areas.length - 1)];
-        int _minAge = (minAge.length() < 1)
+        final int _minAge = (minAge.length() < 1)
                 ? 18 : Integer.parseInt(minAge);
-        int _maxAge = (maxAge.length() < 1)
+        final int _maxAge = (maxAge.length() < 1)
                 ? 60 : Integer.parseInt(maxAge);
-        String birth = randomBirth(_minAge, _maxAge);
-        String order = String.valueOf(
+        final String birth = randomBirth(_minAge, _maxAge);
+        final String order = String.valueOf(
                 (new Random().nextInt(90) + 10));
-        String _sex = (sex.length() < 1)
+        final String _sex = (sex.length() < 1)
                 ? randomSex(null) : randomSex(sex);
         result = area + birth + order + _sex;
         result = result + getVerCode(result);
         if (varname != null) {
-            JMeterVariables vars = getVariables();
+            final JMeterVariables vars = getVariables();
             if (vars != null && varname.length() > 0) {
                 vars.put(varname, result);
             }
@@ -140,10 +139,10 @@ public class WZIDCardFromAge extends AbstractFunction {
         return result;
     }
 
-    public void setParameters(Collection<CompoundVariable> collection)
+    public void setParameters(final Collection<CompoundVariable> collection)
             throws InvalidVariableException {
         checkParameterCount(collection, 0, 4);
-        Object[] values = collection.toArray();
+        final Object[] values = collection.toArray();
         if (values.length > 0)
             sex = ((CompoundVariable) values[0]).execute().trim();
         if (values.length > 1)

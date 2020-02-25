@@ -19,7 +19,6 @@ import java.util.Random;
 /**
  * 随机生成身份证号码
  */
-@SuppressWarnings("unused")
 public class WZIDCardFromBirth extends AbstractFunction {
 
     private static final List<String> desc = new LinkedList<>();
