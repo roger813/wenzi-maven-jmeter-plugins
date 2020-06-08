@@ -1,4 +1,4 @@
-package pers.wenzi.jmeter.plugins.samplers.util;
+package pers.wenzi.jmeter.plugins.util;
 
 import com.alibaba.fastjson.JSONObject;
 import java.util.HashMap;

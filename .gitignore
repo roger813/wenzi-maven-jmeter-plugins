@@ -1,26 +1,24 @@
-# Eclipse Project Files
-.classpath
-.project
-.settings/
+/logs
+target/
+node_modules/
+!.mvn/wrapper/maven-wrapper.jar
 
-# IntelliJ IDEA Files
+### STS ###
+*.log
+.project
+.settings
+.classpath
+.factorypath
+.springBeans
+.apt_generated
+
+### IntelliJ IDEA ###
+.mvn
+.idea
+*.iws
 *.iml
 *.ipr
-*.iws
-*.idea
+mvnw*
 
-# Build Artifacts
-.gradle/
-build/
-target/
-bin/
-dependency-reduced-pom.xml
-
-# Operating System Files
-*.DS_Store
-Thumbs.db
-*.sw?
-.#*
-*#
-*~
-*.sublime-*
+### Mac System
+.DS_Store

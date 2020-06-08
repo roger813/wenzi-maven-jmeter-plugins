@@ -3,12 +3,12 @@ package pers.wenzi.jmeter.plugins.samplers;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import pers.wenzi.jmeter.plugins.util.SignUtil;
+
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
-
-import pers.wenzi.jmeter.plugins.samplers.util.SignUtil;
 
 public class NuanwaSampler extends AbstractJavaSamplerClient {
 
@@ -60,7 +60,17 @@ public class NuanwaSampler extends AbstractJavaSamplerClient {
     investigateArea     = arg0.getParameter("investigateArea");
     liabilityTypeList   = arg0.getParameter("liabilityTypeList");
     proposalNum         = arg0.getParameter("proposalNum");
-    String biz = "{\"batchNo\":\""+ batchNo +"\",\"investigationList\":[{\"authorAgreement\":\""+ authorAgreement +"\",\"authorAgreementUrl\":\""+ authorAgreementUrl +"\",\"authorType\":\""+ authorType +"\",\"insuranceCertNo\":\""+ insuranceCertNo +"\",\"insuranceCertType\":\""+ insuranceCertType +"\",\"insuranceName\":\""+ insuranceName +"\",\"insuredRelation\":\""+ insuredRelation +"\",\"investigateArea\":\""+ investigateArea +"\",\"liabilityTypeList\":[\""+ liabilityTypeList +"\"],\"proposalNum\":\""+ proposalNum +"\"}]}";
+    String biz = "{\"batchNo\":\""+ batchNo +"\",\"investigationList\":[{"
+            + "\"authorAgreement\":\""+ authorAgreement +"\","
+            + "\"authorAgreementUrl\":\""+ authorAgreementUrl +"\","
+            + "\"authorType\":\""+ authorType +"\","
+            + "\"insuranceCertNo\":\""+ insuranceCertNo +"\","
+            + "\"insuranceCertType\":\""+ insuranceCertType +"\","
+            + "\"insuranceName\":\""+ insuranceName +"\","
+            + "\"insuredRelation\":\""+ insuredRelation +"\","
+            + "\"investigateArea\":\""+ investigateArea +"\","
+            + "\"liabilityTypeList\":[\""+ liabilityTypeList +"\"],"
+            + "\"proposalNum\":\""+ proposalNum +"\"}]}";
 
     // System.out.println(biz);
     JSONObject bizContent = JSON.parseObject(biz);
