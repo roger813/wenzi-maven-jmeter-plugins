@@ -17,32 +17,32 @@
 
 #### 使用说明
 
-1. WZDecryptAES
+##### WZDecryptAES
 
    - 说明：AES解密
    - 用法：${__WZDecryptAES(9taFmUe+cbjk8bIoBr9zKw==,key,)}
 
-2. WZEncryptAES
+##### WZEncryptAES
 
    - 说明：AES加密
    - 用法：${__WZEncryptAES(hello,key,)}
 
-3. WZIDCardFromAge
+##### WZIDCardFromAge
 
    - 说明：根据年龄生成随机身份证（默认18-60周岁）
    - 用法：${__WZIDCardFromAge()}、${__WZIDCardFromAge(M,18,60,)}、${__WZIDCardFrom(R,40,40,)}
 
-4. WZIDCardFromBirth
+##### WZIDCardFromBirth
 
    - 说明：根据出生日期生成随机身份证（默认18-60周岁）
    - 用法：${__WZIDCardFromBirth()}、${__WZIDCardFromBirth(M,19880808,)}
 
-5. WZImageBase64
+##### WZImageBase64
 
    - 说明：返回指定图片的base64编码
    - 用法：${__WZImageBase64(file,)}，file为文件路径，必须是绝对路径
 
-6. WZRandomDate
+##### WZRandomDate
 
    - 说明：返回指定区间内的随机日期（格式必须为：yyyy-MM-dd，默认返回：yyyy-MM-dd）
    - 用法：${__WZRandomDate(1988-08-08,,,)}、${__WZRandomDate(1988-08-08,2008-08-08,,)}、${__WZRandomDate(1988-08-08,2008-08-08,yyyyMMdd,)}
