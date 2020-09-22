@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="SuiteName" verbose="1" >
+    <test name="TestName">
+        <classes>
+            <class name="pers.wenzi.jmeter.plugins.samplers.IFR17SamplerTest" />
+        </classes>
+    </test>
+</suite>
