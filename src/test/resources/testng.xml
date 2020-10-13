@@ -2,7 +2,7 @@
 <suite name="SuiteName" verbose="1" >
     <test name="TestName">
         <classes>
-            <class name="pers.wenzi.jmeter.plugins.samplers.IFR17SamplerTest" />
+            <class name="pers.wenzi.jmeter.plugins.samplers.ExcelSamplerTest" />
         </classes>
     </test>
 </suite>

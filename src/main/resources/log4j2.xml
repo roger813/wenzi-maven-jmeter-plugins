@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR">
+    <Appenders>
+<!--        <Console name="Console" target="SYSTEM_OUT">-->
+<!--            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />-->
+<!--            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />-->
+<!--        </Console>-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36}#%M %L:%msg%xEx%n"/>
+        </Console>
+    </Appenders>
+    <loggers>
+        <root level="trace">
+            <appender-ref ref="Console"/>
+        </root>
+    </loggers>
+</Configuration>
