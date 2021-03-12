@@ -21,8 +21,9 @@ public class ExcelSamplerTest {
     public void runTest() {
         Arguments arg0 = new Arguments();
         arg0.addArgument("file", "/Users/wenzi/Documents/_git/work/_IFRS17/script/template/CF_INPUT_Template.xlsx");
+        arg0.addArgument("sheet name", "CF Input");
+        arg0.addArgument("query area", "2:1,4");
         arg0.addArgument("variable names", "Category,Group,Product,Pol_M,Acc_M,Index,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12");
-        arg0.addArgument("thread no", "1");
         arg0.addArgument("iteration no", "4");
 
         ExcelSampler sampler = new ExcelSampler();

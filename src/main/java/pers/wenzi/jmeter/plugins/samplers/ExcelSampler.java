@@ -27,6 +27,7 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
     private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
     private String sheetName;
+    private String queryArea;
     private String[] varNames;
 
     private List<String> listValue;
@@ -35,8 +36,9 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
     public Arguments getDefaultParameters() {
         Arguments args = new Arguments();
         args.addArgument("file", "");
-        args.addArgument("sheet name", "");
-        args.addArgument("variable names", "");
+        args.addArgument("sheet name", "Sheet1");
+        args.addArgument("query area", "1:1,8");
+        args.addArgument("variable names", "var1");
         args.addArgument("iteration no", "${__counter(true,)}");
         return args;
     }
@@ -47,6 +49,8 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
         String file = arg0.getParameter("file");
         // 获取sheet名称
         sheetName = arg0.getParameter("sheet name");
+        // 获取检索区域
+        queryArea = arg0.getParameter("query area");
         // 获取变量列表
         String names = arg0.getParameter("variable names");
         if (null == names || names.trim().length() < 1) {
@@ -105,10 +109,15 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
         String fName = file.getName();
         String fType = fName.substring(fName.lastIndexOf(".") + 1);
         try {
-            if ("xls".equalsIgnoreCase(fType))
+            if ("xls".equalsIgnoreCase(fType)) {
                 wb = new HSSFWorkbook(is);
-            if ("xlsx".equalsIgnoreCase(fType))
+            }
+            if ("xlsx".equalsIgnoreCase(fType)) {
                 wb = new XSSFWorkbook(is);
+            }
+            if ("xlsm".equalsIgnoreCase(fType)) {
+                wb = new XSSFWorkbook(is);
+            }
         } catch (IOException e) {
             logger.error("创建实例错误，错误原因：{}", e.getMessage());
             return null;
@@ -118,30 +127,44 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
 
     private List<String> fetchExcel(Workbook wb) {
         // 选择工作表，若无指定取第1张表，否则按指定表取
-        Sheet sheet = (sheetName.length() < 1)
-                ? wb.getSheetAt(0) : wb.getSheet(sheetName);
+        Sheet sheet = (sheetName.length() > 0) ? wb.getSheet(sheetName) : wb.getSheet("Sheet1");
         // 检查是否存在有效行，若没有一行有数据，返回空
         int rows = sheet.getPhysicalNumberOfRows();
         if (rows < 1) {
             logger.error("文件中不存在有效数据行，请检查！");
             return null;
         }
-        // 检查有效列数，若小于变量列表
+        // 检查有效列数，若小于变量列表, 返回空
         int cols = sheet.getRow(0).getPhysicalNumberOfCells();
         if (cols < varNames.length) {
             logger.error("文件中列总数小于变量数，请检查！");
             return null;
         }
 
+        int headRow = (queryArea.length() > 0 && queryArea.indexOf(":") > 0)
+                ? Integer.parseInt(queryArea.substring(0, queryArea.indexOf(":"))) : 1;
+        int headCol = (queryArea.length() > 0)
+                ? (queryArea.contains(","))
+                    ? Integer.parseInt(queryArea.substring(queryArea.indexOf(":") + 1, queryArea.indexOf(",")))
+                    : Integer.parseInt(queryArea.substring(queryArea.indexOf(":") + 1))
+                : 1;
+        int footRow = (queryArea.contains(","))
+                ? Integer.parseInt(queryArea.substring(queryArea.indexOf(",") + 1))
+                : rows;
+//        int footCol = (queryArea.contains(",") && queryArea.lastIndexOf(":") > 0)
+//                ? Integer.parseInt(queryArea.substring(queryArea.lastIndexOf(":") + 1, queryArea.length()))
+//                : cols;
+
         List<String> list = new LinkedList<>();
-        for (int curRow = sheet.getFirstRowNum() + 1; curRow < rows; curRow++) {
+        for (int curRow = headRow - 1; curRow < footRow; curRow++) {
             StringBuilder sb = new StringBuilder();
-            for (int curCol = 0; curCol < varNames.length; curCol ++) {
+            for (int curCol = headCol - 1; curCol < varNames.length; curCol ++) {
                 Row row = sheet.getRow(curRow);
                 Cell cell = row.getCell(curCol);
                 sb.append(celltoString(cell, cell.getCellType()));
-                if (curCol < varNames.length - 1)
+                if (curCol < varNames.length - 1) {
                     sb.append(",");
+                }
             }
             list.add(sb.toString());
         }
