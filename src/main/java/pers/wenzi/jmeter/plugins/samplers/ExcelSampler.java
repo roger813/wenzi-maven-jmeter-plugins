@@ -1,12 +1,11 @@
 package pers.wenzi.jmeter.plugins.samplers;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.formula.eval.ErrorEval;
 import org.apache.poi.ss.usermodel.*;
@@ -22,9 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class ExcelSampler extends AbstractJavaSamplerClient {
-
-    private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
     private String sheetName;
     private String queryArea;
@@ -36,10 +34,8 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
     public Arguments getDefaultParameters() {
         Arguments args = new Arguments();
         args.addArgument("file", "");
-        args.addArgument("sheet name", "Sheet1");
-        args.addArgument("query area", "1:1,8");
-        args.addArgument("variable names", "var1");
-        args.addArgument("iteration no", "${__counter(true,)}");
+        args.addArgument("sheet", "");
+        args.addArgument("scope", "");
         return args;
     }
 
@@ -54,7 +50,7 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
         // 获取变量列表
         String names = arg0.getParameter("variable names");
         if (null == names || names.trim().length() < 1) {
-            logger.error("缺少变量名列表，请检查！");
+            log.error("缺少变量名列表，请检查！");
             System.exit(1);
         }
         varNames = names.split(",");
@@ -85,20 +81,20 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
         try {
             File file = new File(filePath);
             if (!file.exists()) {
-                logger.error("文件不存在，请检查！");
+                log.error("文件不存在，请检查！");
                 return null;
             }
             is = new FileInputStream(file);
             wb = getWorkbook(is, file);
             return (wb == null) ? null : fetchExcel(wb);
         } catch (IOException e) {
-            logger.error("文件预加载错误，错误原因：{}", e.getMessage());
+            log.error("文件预加载错误，错误原因：{}", e.getMessage());
         } finally {
             try {
                 if (null != wb) wb.close();
                 if (null != is) is.close();
             } catch (Exception e) {
-                logger.error("关闭文件流错误，错误原因：{}", e.getMessage());
+                log.error("关闭文件流错误，错误原因：{}", e.getMessage());
             }
         }
         return null;
@@ -119,7 +115,7 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
                 wb = new XSSFWorkbook(is);
             }
         } catch (IOException e) {
-            logger.error("创建实例错误，错误原因：{}", e.getMessage());
+            log.error("创建实例错误，错误原因：{}", e.getMessage());
             return null;
         }
         return wb;
@@ -131,13 +127,13 @@ public class ExcelSampler extends AbstractJavaSamplerClient {
         // 检查是否存在有效行，若没有一行有数据，返回空
         int rows = sheet.getPhysicalNumberOfRows();
         if (rows < 1) {
-            logger.error("文件中不存在有效数据行，请检查！");
+            log.error("文件中不存在有效数据行，请检查！");
             return null;
         }
         // 检查有效列数，若小于变量列表, 返回空
         int cols = sheet.getRow(0).getPhysicalNumberOfCells();
         if (cols < varNames.length) {
-            logger.error("文件中列总数小于变量数，请检查！");
+            log.error("文件中列总数小于变量数，请检查！");
             return null;
         }
 
